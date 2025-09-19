@@ -76,18 +76,120 @@
         <div class="mt-20 text-center">
             <p class="text-gray-400">quin@luminouscells.com</p>
         </div>
-
-        <!-- <div class="mt-20 max-w-2xl mx-auto">
-            <iframe style="border-radius:12px" 
-                    src="https://open.spotify.com/embed/artist/2mau55UyzWAYJkT5fN1tKU" 
-                    width="100%" 
-                    height="352" 
-                    frameBorder="0" 
-                    allowfullscreen="" 
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                    loading="lazy">
-            </iframe>
-        </div> -->
+        <!-- Quotes -->
+        <div id="quote-animation-component">
+            <div id="quote-container">
+                <div id="quotes-container">
+                    <!-- Quotes will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+        <!-- -->
     </div>
+
+    <script>
+        // Quote animation script
+        (function() {
+            // Quote database
+            const quotes = [
+                "Hello world -God, probably",
+                "So many great songs go unlistened to because the intro is too long -Quin ",
+                "So what are you up to, you frozen whale, you smoked, dried, canned piece of soul -Einstein",
+                "Your worst sin is that you've destroyed and betrayed yourself for nothing -Dostoeysky",
+                "Be runnin' up that road, be runnin' up that hill, be runnin' up that that building -Kate Bush"
+            ];
+            
+            // Pastel neon colors
+            const colors = ["quote-pastel-red", "quote-pastel-blue", "quote-pastel-green"];
+            
+            // Fixed settings (hardcoded values)
+            const QUOTE_DELAY = 3000; // ms
+            const FADE_DURATION = 1800; // ms
+            const MAX_QUOTES = 4;
+            const FONT_SIZE = 24; // px
+            
+            // DOM elements
+            const quotesContainer = document.getElementById('quotes-container');
+            
+            // Get random position within container
+            function getRandomPosition() {
+                const containerRect = quotesContainer.getBoundingClientRect();
+                const maxX = containerRect.width - 320; // Account for quote width
+                const maxY = containerRect.height - 180; // Account for quote height
+                
+                const x = Math.floor(Math.random() * maxX);
+                const y = Math.floor(Math.random() * maxY);
+                
+                return { x, y };
+            }
+            
+            // Get random quote from database
+            function getRandomQuote() {
+                return quotes[Math.floor(Math.random() * quotes.length)];
+            }
+            
+            // Get random color class
+            function getRandomColor() {
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // Display a new quote
+            function showQuote() {
+                // Remove oldest quote if we've reached the maximum
+                const currentQuotes = document.querySelectorAll('.quote-item:not(.fading-out)');
+                if (currentQuotes.length >= MAX_QUOTES) {
+                    const oldestQuote = currentQuotes[0];
+                    oldestQuote.classList.add('fading-out');
+                    setTimeout(() => {
+                        if (oldestQuote.parentNode) {
+                            oldestQuote.parentNode.removeChild(oldestQuote);
+                        }
+                    }, FADE_DURATION);
+                }
+                
+                // Create new quote element
+                const quoteElement = document.createElement('div');
+                quoteElement.className = `quote-item ${getRandomColor()} quote-glow`;
+                quoteElement.textContent = getRandomQuote();
+                
+                // Set random position
+                const position = getRandomPosition();
+                quoteElement.style.left = `${position.x}px`;
+                quoteElement.style.top = `${position.y}px`;
+                
+                // Set font size
+                quoteElement.style.fontSize = `${FONT_SIZE}px`;
+                
+                // Add to container
+                quotesContainer.appendChild(quoteElement);
+                
+                // Trigger fade in
+                setTimeout(() => {
+                    quoteElement.style.opacity = '1';
+                }, 10);
+                
+                // Set timeout to fade out
+                setTimeout(() => {
+                    quoteElement.classList.add('fading-out');
+                    setTimeout(() => {
+                        if (quoteElement.parentNode) {
+                            quoteElement.parentNode.removeChild(quoteElement);
+                        }
+                    }, FADE_DURATION);
+                }, QUOTE_DELAY + 1000);
+            }
+            
+            // Initialize with 2 quotes
+            showQuote();
+            setTimeout(showQuote, 800);
+            
+            // Start the interval
+            const intervalId = setInterval(showQuote, QUOTE_DELAY);
+        })();
+    </script>
+
+
+
+
 </body>
 </html>
