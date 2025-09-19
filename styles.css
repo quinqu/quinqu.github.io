@@ -41,93 +41,69 @@
     transform: translateX(15em);
 }
 
-/* Reset only our component elements */
+/* Quote animation styles */
 #quote-animation-component * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-#quote-animation-component {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-#quote-container {
+  }
+  
+  #quote-container {
     width: 100%;
-    max-width: 1000px;
+    background: rgba(0, 0, 0, 0.7);
     overflow: hidden;
-    padding: 30px;
-}
-
-#quote-title {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 2.5rem;
-    font-weight: 700;
-    background: linear-gradient(to right, #ff7eb3, #7afcff, #9afc5f);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 10px rgba(255, 126, 179, 0.5);
-}
-
-#quotes-container {
+    padding: 30px 0;
+  }
+  
+  #quotes-container {
     position: relative;
-    height: 450px;
+    height: 300px;
     width: 100%;
-    border-radius: 10px;
     overflow: hidden;
-}
-
-.quote-item {
+  }
+  
+  .quote-item {
     position: absolute;
     max-width: 320px;
-    padding: 25px;
+    padding: 20px 25px;
     opacity: 0;
     transition: opacity 1.8s ease-in-out;
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 500;
     line-height: 1.6;
-    text-shadow: 0 0 10px currentColor;
     font-style: italic;
-    background-color: rgba(255, 255, 255, 0); /* Opaque background */
-}
-
-.quote-pastel-red {
-    color: #d65b5b; /* Pastel neon red */
-}
-
-.quote-pastel-blue {
-    color: #8695da; /* Pastel neon blue */
-}
-
-.quote-pastel-green {
-    color: #91d6cb; /* Pastel neon green */
-}
-
-.quote-glow {
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+  
+  .quote-pastel-red {
+    color: #ff7eb3;
+    text-shadow: 0 0 10px #ff7eb3, 0 0 20px #ff7eb3;
+  }
+  
+  .quote-pastel-blue {
+    color: #7afcff;
+    text-shadow: 0 0 10px #7afcff, 0 0 20px #7afcff;
+  }
+  
+  .quote-pastel-green {
+    color: #9afc5f;
+    text-shadow: 0 0 10px #9afc5f, 0 0 20px #9afc5f;
+  }
+  
+  .quote-glow {
     animation: quoteGlowEffect 3s infinite alternate;
-}
-
-@keyframes quoteGlowEffect {
+  }
+  
+  @keyframes quoteGlowEffect {
     from {
-        text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+      text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
     }
     to {
-        text-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 40px currentColor;
+      text-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 40px currentColor;
     }
-}
-
-#quote-footer {
-    text-align: center;
-    margin-top: 25px;
-    color: #aaa;
-    font-size: 0.9rem;
-}
+  }

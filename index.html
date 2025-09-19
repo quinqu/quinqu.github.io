@@ -7,7 +7,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&display=swap" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
     <style>
       * {
         font-family: 'Inter', sans-serif;
@@ -17,6 +16,7 @@
       h1 {
         font-family: 'La Belle Aurore', cursive !important;
       }
+
     </style>
 </head>
 <body class="bg-black text-white min-h-screen font-['Inter']">
@@ -24,30 +24,21 @@
         <!-- Hero Section -->
         <div class="text-center mb-20">
             <h1 class="text-7xl font-bold mb-4 font-['La_Belle_Aurore']">Quin Quintero</h1>
-            <!-- <a href="https://www.linkedin.com/in/quinq/">Linkedin</a>
-            <br>
-            <a href="https://github.com/quinqu">Github</a> -->
-
             <ul>
-                <li style="display:inline-block;">
-                    <a href="https://www.linkedin.com/in/quinq/">LinkedIn</a>
+                <li class="inline-block mx-2">
+                    <a href="https://www.linkedin.com/in/quinq/" class="text-blue-400 hover:text-blue-300">LinkedIn</a>
                 </li>
-
-                <li style="display:inline-block;">
-                    <a href="https://github.com/quinqu">Github</a>
+                <li class="inline-block mx-2">
+                    <a href="https://github.com/quinqu" class="text-blue-400 hover:text-blue-300">Github</a>
                 </li>
             </ul>
-
         </div>
-
 
         <div class="text-center mb-20 intro"> 
             <p> 
                 Software Engineer with 4+ years of experience building scalable backend systems and cloud infrastructure, launching my career after an immersive software engineering program. Currently pursuing a physics degree. Proven track record optimizing high-performance systems, delivering tools that elevate developer productivity, and leading cross-functional projects. 
             </p>
         </div>
-
-
 
         <div class="text-center mb-20"> 
             <h1 class="text-4xl font-bold mb-4 font-['La_Belle_Aurore']">Experience</h1>
@@ -59,7 +50,6 @@
             <br> 
             <p> Teleport (Formerly Gravitational) - Software Engineer Intern </p>
             <p><small>August 2020 - January 2021</small></p>
-
         </div>
 
         <div class="text-center mb-20"> 
@@ -67,7 +57,6 @@
             <p> Arizona State University Online - B.S. Physics </p>
             <p><small>Expected Graduation May 2027</small></p>
             <br> 
-
             <p> Ada Developers Academy - Full-Stack Development Certificate </p>
             <p><small>Feburary 2020 - January 2021 </small></p>
         </div>
@@ -76,6 +65,7 @@
         <div class="mt-20 text-center">
             <p class="text-gray-400">quin@luminouscells.com</p>
         </div>
+        
         <!-- Quotes -->
         <div id="quote-animation-component">
             <div id="quote-container">
@@ -84,48 +74,85 @@
                 </div>
             </div>
         </div>
-        <!-- -->
     </div>
 
     <script>
-        // Quote animation script
+        // Quote animation script with non-overlapping and repeat prevention
         (function() {
             // Quote database
             const quotes = [
                 "Hello world -God, probably",
                 "So many great songs go unlistened to because the intro is too long -Quin ",
                 "So what are you up to, you frozen whale, you smoked, dried, canned piece of soul -Einstein",
-                "Your worst sin is that you've destroyed and betrayed yourself for nothing -Dostoeysky",
                 "Be runnin' up that road, be runnin' up that hill, be runnin' up that that building -Kate Bush"
             ];
             
             // Pastel neon colors
             const colors = ["quote-pastel-red", "quote-pastel-blue", "quote-pastel-green"];
             
-            // Fixed settings (hardcoded values)
-            const QUOTE_DELAY = 3000; // ms
-            const FADE_DURATION = 1800; // ms
+            // Fixed settings
+            const QUOTE_DELAY = 3000;
+            const FADE_DURATION = 1800;
             const MAX_QUOTES = 4;
-            const FONT_SIZE = 24; // px
+            const FONT_SIZE = 20;
             
             // DOM elements
             const quotesContainer = document.getElementById('quotes-container');
             
-            // Get random position within container
-            function getRandomPosition() {
+            // Track active quotes and last used quote
+            let activeQuotes = [];
+            let lastQuoteIndex = -1;
+            
+            // Get non-overlapping position
+            function getNonOverlappingPosition(width, height) {
                 const containerRect = quotesContainer.getBoundingClientRect();
-                const maxX = containerRect.width - 320; // Account for quote width
-                const maxY = containerRect.height - 180; // Account for quote height
+                const maxX = containerRect.width - width;
+                const maxY = containerRect.height - height;
                 
-                const x = Math.floor(Math.random() * maxX);
-                const y = Math.floor(Math.random() * maxY);
+                if (maxX <= 0 || maxY <= 0) {
+                    return { x: 50, y: 50, width, height };
+                }
                 
-                return { x, y };
+                let attempts = 0;
+                let position;
+                let overlapping = true;
+                
+                while (overlapping && attempts < 50) {
+                    const x = Math.floor(Math.random() * maxX);
+                    const y = Math.floor(Math.random() * maxY);
+                    
+                    position = { x, y, width, height };
+                    
+                    overlapping = activeQuotes.some(quote => {
+                        return !(position.x + position.width < quote.x || 
+                                position.x > quote.x + quote.width ||
+                                position.y + position.height < quote.y ||
+                                position.y > quote.y + quote.height);
+                    });
+                    
+                    attempts++;
+                }
+                
+                if (overlapping) {
+                    const x = Math.floor(Math.random() * maxX);
+                    const y = Math.floor(Math.random() * maxY);
+                    position = { x, y, width, height };
+                }
+                
+                return position;
             }
             
-            // Get random quote from database
+            // Get random quote that hasn't been used recently
             function getRandomQuote() {
-                return quotes[Math.floor(Math.random() * quotes.length)];
+                if (quotes.length <= 1) return quotes[0];
+                
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * quotes.length);
+                } while (newIndex === lastQuoteIndex);
+                
+                lastQuoteIndex = newIndex;
+                return quotes[newIndex];
             }
             
             // Get random color class
@@ -135,61 +162,70 @@
             
             // Display a new quote
             function showQuote() {
-                // Remove oldest quote if we've reached the maximum
-                const currentQuotes = document.querySelectorAll('.quote-item:not(.fading-out)');
-                if (currentQuotes.length >= MAX_QUOTES) {
-                    const oldestQuote = currentQuotes[0];
-                    oldestQuote.classList.add('fading-out');
-                    setTimeout(() => {
-                        if (oldestQuote.parentNode) {
-                            oldestQuote.parentNode.removeChild(oldestQuote);
-                        }
-                    }, FADE_DURATION);
+                if (activeQuotes.length >= MAX_QUOTES) {
+                    const oldestQuote = document.querySelector('.quote-item:not(.fading-out)');
+                    if (oldestQuote) {
+                        oldestQuote.classList.add('fading-out');
+                        setTimeout(() => {
+                            const index = activeQuotes.findIndex(q => q.element === oldestQuote);
+                            if (index !== -1) activeQuotes.splice(index, 1);
+                            if (oldestQuote.parentNode) oldestQuote.parentNode.removeChild(oldestQuote);
+                        }, FADE_DURATION);
+                    }
                 }
                 
-                // Create new quote element
                 const quoteElement = document.createElement('div');
+                const quoteText = getRandomQuote();
                 quoteElement.className = `quote-item ${getRandomColor()} quote-glow`;
-                quoteElement.textContent = getRandomQuote();
+                quoteElement.textContent = quoteText;
                 
-                // Set random position
-                const position = getRandomPosition();
+                const textLength = quoteText.length;
+                const approxWidth = Math.min(320, 200 + (textLength * 8));
+                const lineHeight = 1.6;
+                const lineCount = Math.ceil((textLength * 1.4) / 30);
+                const approxHeight = 40 + (lineCount * lineHeight * FONT_SIZE);
+                
+                const position = getNonOverlappingPosition(approxWidth, approxHeight);
                 quoteElement.style.left = `${position.x}px`;
                 quoteElement.style.top = `${position.y}px`;
-                
-                // Set font size
+                quoteElement.style.width = `${approxWidth}px`;
                 quoteElement.style.fontSize = `${FONT_SIZE}px`;
                 
-                // Add to container
                 quotesContainer.appendChild(quoteElement);
                 
-                // Trigger fade in
-                setTimeout(() => {
-                    quoteElement.style.opacity = '1';
-                }, 10);
+                activeQuotes.push({
+                    element: quoteElement,
+                    x: position.x,
+                    y: position.y,
+                    width: approxWidth,
+                    height: approxHeight
+                });
                 
-                // Set timeout to fade out
+                setTimeout(() => quoteElement.style.opacity = '1', 10);
+                
                 setTimeout(() => {
                     quoteElement.classList.add('fading-out');
                     setTimeout(() => {
-                        if (quoteElement.parentNode) {
-                            quoteElement.parentNode.removeChild(quoteElement);
-                        }
+                        const index = activeQuotes.findIndex(q => q.element === quoteElement);
+                        if (index !== -1) activeQuotes.splice(index, 1);
+                        if (quoteElement.parentNode) quoteElement.parentNode.removeChild(quoteElement);
                     }, FADE_DURATION);
                 }, QUOTE_DELAY + 1000);
             }
             
-            // Initialize with 2 quotes
-            showQuote();
-            setTimeout(showQuote, 800);
+            // Initialize after page load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initQuotes);
+            } else {
+                initQuotes();
+            }
             
-            // Start the interval
-            const intervalId = setInterval(showQuote, QUOTE_DELAY);
+            function initQuotes() {
+                setTimeout(showQuote, 100);
+                setTimeout(showQuote, 1000);
+                setInterval(showQuote, QUOTE_DELAY);
+            }
         })();
     </script>
-
-
-
-
-</body>
+    </body>
 </html>
